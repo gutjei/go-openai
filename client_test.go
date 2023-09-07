@@ -9,7 +9,7 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/sashabaranov/go-openai/internal/test"
+	"github.com/gutjei/go-openai/internal/test"
 )
 
 var errTestRequestBuilderFailed = errors.New("test request builder failed")
@@ -201,7 +201,8 @@ func TestClientReturnsRequestBuilderErrors(t *testing.T) {
 			return client.CreateCompletionStream(ctx, CompletionRequest{Prompt: ""})
 		}},
 		{"CreateChatCompletion", func() (any, error) {
-			return client.CreateChatCompletion(ctx, ChatCompletionRequest{Model: GPT3Dot5Turbo})
+			r, _, err := client.CreateChatCompletion(ctx, ChatCompletionRequest{Model: GPT3Dot5Turbo})
+			return r, err
 		}},
 		{"CreateChatCompletionStream", func() (any, error) {
 			return client.CreateChatCompletionStream(ctx, ChatCompletionRequest{Model: GPT3Dot5Turbo})

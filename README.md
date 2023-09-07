@@ -28,7 +28,7 @@ package main
 import (
 	"context"
 	"fmt"
-	openai "github.com/sashabaranov/go-openai"
+	openai "github.com/gutjei/go-openai"
 )
 
 func main() {
@@ -80,7 +80,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	openai "github.com/sashabaranov/go-openai"
+	openai "github.com/gutjei/go-openai"
 )
 
 func main() {
@@ -133,7 +133,7 @@ package main
 import (
 	"context"
 	"fmt"
-	openai "github.com/sashabaranov/go-openai"
+	openai "github.com/gutjei/go-openai"
 )
 
 func main() {
@@ -166,7 +166,7 @@ import (
 	"context"
 	"fmt"
 	"io"
-	openai "github.com/sashabaranov/go-openai"
+	openai "github.com/gutjei/go-openai"
 )
 
 func main() {
@@ -215,7 +215,7 @@ import (
 	"context"
 	"fmt"
 
-	openai "github.com/sashabaranov/go-openai"
+	openai "github.com/gutjei/go-openai"
 )
 
 func main() {
@@ -247,7 +247,7 @@ import (
 	"fmt"
 	"os"
 
-	openai "github.com/sashabaranov/go-openai"
+	openai "github.com/gutjei/go-openai"
 )
 
 func main() {
@@ -288,7 +288,7 @@ import (
 	"context"
 	"encoding/base64"
 	"fmt"
-	openai "github.com/sashabaranov/go-openai"
+	openai "github.com/gutjei/go-openai"
 	"image/png"
 	"os"
 )
@@ -392,7 +392,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/sashabaranov/go-openai"
+	"github.com/gutjei/go-openai"
 )
 
 func main() {
@@ -446,7 +446,7 @@ import (
 	"context"
 	"fmt"
 
-	openai "github.com/sashabaranov/go-openai"
+	openai "github.com/gutjei/go-openai"
 )
 
 func main() {
@@ -493,7 +493,7 @@ import (
 	"context"
 	"fmt"
 
-	openai "github.com/sashabaranov/go-openai"
+	openai "github.com/gutjei/go-openai"
 )
 
 func main() {
@@ -624,7 +624,7 @@ package main
 import (
 	"context"
 	"fmt"
-	"github.com/sashabaranov/go-openai"
+	"github.com/gutjei/go-openai"
 )
 
 func main() {
