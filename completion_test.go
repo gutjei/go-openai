@@ -21,7 +21,7 @@ func TestCompletionsWrongModel(t *testing.T) {
 	config.BaseURL = "http://localhost/v1"
 	client := NewClientWithConfig(config)
 
-	_, err := client.CreateCompletion(
+	_, _, err := client.CreateCompletion(
 		context.Background(),
 		CompletionRequest{
 			MaxTokens: 5,
@@ -39,7 +39,7 @@ func TestCompletionWithStream(t *testing.T) {
 
 	ctx := context.Background()
 	req := CompletionRequest{Stream: true}
-	_, err := client.CreateCompletion(ctx, req)
+	_, _, err := client.CreateCompletion(ctx, req)
 	if !errors.Is(err, ErrCompletionStreamNotSupported) {
 		t.Fatalf("CreateCompletion didn't return ErrCompletionStreamNotSupported")
 	}
@@ -55,7 +55,7 @@ func TestCompletions(t *testing.T) {
 		Model:     "ada",
 		Prompt:    "Lorem ipsum",
 	}
-	_, err := client.CreateCompletion(context.Background(), req)
+	_, _, err := client.CreateCompletion(context.Background(), req)
 	checks.NoError(t, err, "CreateCompletion error")
 }
 

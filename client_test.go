@@ -194,7 +194,8 @@ func TestClientReturnsRequestBuilderErrors(t *testing.T) {
 
 	testCases := []TestCase{
 		{"CreateCompletion", func() (any, error) {
-			return client.CreateCompletion(ctx, CompletionRequest{Prompt: "testing"})
+			r, _, err := client.CreateCompletion(ctx, CompletionRequest{Prompt: "testing"})
+			return r, err
 		}},
 		{"CreateCompletionStream", func() (any, error) {
 			return client.CreateCompletionStream(ctx, CompletionRequest{Prompt: ""})
@@ -286,7 +287,7 @@ func TestClientReturnsRequestBuilderErrorsAddtion(t *testing.T) {
 	client := NewClientWithConfig(config)
 	client.requestBuilder = &failingRequestBuilder{}
 	ctx := context.Background()
-	_, err := client.CreateCompletion(ctx, CompletionRequest{Prompt: 1})
+	_, _, err := client.CreateCompletion(ctx, CompletionRequest{Prompt: 1})
 	if !errors.Is(err, ErrCompletionRequestPromptTypeNotSupported) {
 		t.Fatalf("Did not return error when request builder failed: %v", err)
 	}

@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"strconv"
 	"strings"
 
 	utils "github.com/sashabaranov/go-openai/internal"
@@ -82,7 +83,16 @@ func (c *Client) newRequest(ctx context.Context, method, url string, setters ...
 	return req, nil
 }
 
-func (c *Client) sendRequest(req *http.Request, v any) error {
+type XMetaResponse struct {
+	XRateLimitRequests          int    `json:"X-Ratelimit-Limit-Requests"`
+	XRateLimitTokens            int    `json:"id"`
+	XRateLimitRemainingRequests int    `json:"id"`
+	XRateLimitRemainingTokens   int    `json:"id"`
+	XRateLimitResetRequests     string `json:"id"`
+	XRateLimitResetTokens       string `json:"id"`
+}
+
+func (c *Client) sendRequest(req *http.Request, v any, xmeta *XMetaResponse) error {
 	req.Header.Set("Accept", "application/json; charset=utf-8")
 
 	// Check whether Content-Type is already set, Upload Files API requires
@@ -99,10 +109,25 @@ func (c *Client) sendRequest(req *http.Request, v any) error {
 
 	defer res.Body.Close()
 
+	if xmeta != nil {
+		if value, err := strconv.Atoi(res.Header.Get("X-Ratelimit-Limit-Requests")); err == nil {
+			xmeta.XRateLimitRequests = value
+		}
+		if value, err := strconv.Atoi(res.Header.Get("X-Ratelimit-Limit-Tokens")); err == nil {
+			xmeta.XRateLimitTokens = value
+		}
+		if value, err := strconv.Atoi(res.Header.Get("X-Ratelimit-Remaining-Requests")); err == nil {
+			xmeta.XRateLimitRemainingRequests = value
+		}
+		if value, err := strconv.Atoi(res.Header.Get("X-Ratelimit-Remaining-Tokens")); err == nil {
+			xmeta.XRateLimitRemainingTokens = value
+		}
+		xmeta.XRateLimitResetRequests = res.Header.Get("X-Ratelimit-Reset-Requests")
+		xmeta.XRateLimitResetTokens = res.Header.Get("X-Ratelimit-Reset-Tokens")
+	}
 	if isFailureStatusCode(res) {
 		return c.handleErrorResp(res)
 	}
-
 	return decodeResponse(res.Body, v)
 }
 

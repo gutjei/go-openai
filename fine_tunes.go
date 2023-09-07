@@ -98,7 +98,7 @@ func (c *Client) CreateFineTune(ctx context.Context, request FineTuneRequest) (r
 		return
 	}
 
-	err = c.sendRequest(req, &response)
+	err = c.sendRequest(req, &response, nil)
 	return
 }
 
@@ -112,7 +112,7 @@ func (c *Client) CancelFineTune(ctx context.Context, fineTuneID string) (respons
 		return
 	}
 
-	err = c.sendRequest(req, &response)
+	err = c.sendRequest(req, &response, nil)
 	return
 }
 
@@ -125,7 +125,7 @@ func (c *Client) ListFineTunes(ctx context.Context) (response FineTuneList, err 
 		return
 	}
 
-	err = c.sendRequest(req, &response)
+	err = c.sendRequest(req, &response, nil)
 	return
 }
 
@@ -139,7 +139,7 @@ func (c *Client) GetFineTune(ctx context.Context, fineTuneID string) (response F
 		return
 	}
 
-	err = c.sendRequest(req, &response)
+	err = c.sendRequest(req, &response, nil)
 	return
 }
 
@@ -152,7 +152,7 @@ func (c *Client) DeleteFineTune(ctx context.Context, fineTuneID string) (respons
 		return
 	}
 
-	err = c.sendRequest(req, &response)
+	err = c.sendRequest(req, &response, nil)
 	return
 }
 
@@ -165,6 +165,6 @@ func (c *Client) ListFineTuneEvents(ctx context.Context, fineTuneID string) (res
 		return
 	}
 
-	err = c.sendRequest(req, &response)
+	err = c.sendRequest(req, &response, nil)
 	return
 }

@@ -165,6 +165,6 @@ func (c *Client) CreateChatCompletion(
 		return
 	}
 
-	err = c.sendRequest(req, &response)
+	err = c.sendRequest(req, &response, nil)
 	return
 }
