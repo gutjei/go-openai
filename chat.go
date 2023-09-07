@@ -148,7 +148,7 @@ type ChatCompletionResponse struct {
 func (c *Client) CreateChatCompletion(
 	ctx context.Context,
 	request ChatCompletionRequest,
-) (response ChatCompletionResponse, err error) {
+) (response ChatCompletionResponse, xmeta XMetaResponse, err error) {
 	if request.Stream {
 		err = ErrChatCompletionStreamNotSupported
 		return
@@ -165,6 +165,6 @@ func (c *Client) CreateChatCompletion(
 		return
 	}
 
-	err = c.sendRequest(req, &response, nil)
+	err = c.sendRequest(req, &response, &xmeta)
 	return
 }
