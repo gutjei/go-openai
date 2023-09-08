@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
+	"time"
 
 	utils "github.com/gutjei/go-openai/internal"
 )
@@ -84,12 +85,12 @@ func (c *Client) newRequest(ctx context.Context, method, url string, setters ...
 }
 
 type XMetaResponse struct {
-	XRateLimitRequests          int    `json:"X-Ratelimit-Limit-Requests"`
-	XRateLimitTokens            int    `json:"id"`
-	XRateLimitRemainingRequests int    `json:"id"`
-	XRateLimitRemainingTokens   int    `json:"id"`
-	XRateLimitResetRequests     string `json:"id"`
-	XRateLimitResetTokens       string `json:"id"`
+	XRateLimitRequests          int           `json:"X-Ratelimit-Limit-Requests"`
+	XRateLimitTokens            int           `json:"X-Ratelimit-Limit-Tokens"`
+	XRateLimitRemainingRequests int           `json:"X-Ratelimit-Remaining-Requests"`
+	XRateLimitRemainingTokens   int           `json:"X-Ratelimit-Remaining-Tokens"`
+	XRateLimitResetRequests     time.Duration `json:"X-Ratelimit-Reset-Requests"`
+	XRateLimitResetTokens       time.Duration `json:"X-Ratelimit-Reset-Tokens"`
 }
 
 func (c *Client) sendRequest(req *http.Request, v any, xmeta *XMetaResponse) error {
@@ -109,22 +110,8 @@ func (c *Client) sendRequest(req *http.Request, v any, xmeta *XMetaResponse) err
 
 	defer res.Body.Close()
 
-	if xmeta != nil {
-		if value, err := strconv.Atoi(res.Header.Get("X-Ratelimit-Limit-Requests")); err == nil {
-			xmeta.XRateLimitRequests = value
-		}
-		if value, err := strconv.Atoi(res.Header.Get("X-Ratelimit-Limit-Tokens")); err == nil {
-			xmeta.XRateLimitTokens = value
-		}
-		if value, err := strconv.Atoi(res.Header.Get("X-Ratelimit-Remaining-Requests")); err == nil {
-			xmeta.XRateLimitRemainingRequests = value
-		}
-		if value, err := strconv.Atoi(res.Header.Get("X-Ratelimit-Remaining-Tokens")); err == nil {
-			xmeta.XRateLimitRemainingTokens = value
-		}
-		xmeta.XRateLimitResetRequests = res.Header.Get("X-Ratelimit-Reset-Requests")
-		xmeta.XRateLimitResetTokens = res.Header.Get("X-Ratelimit-Reset-Tokens")
-	}
+	decodeXmeta(res.Header, xmeta)
+
 	if isFailureStatusCode(res) {
 		return c.handleErrorResp(res)
 	}
@@ -182,6 +169,29 @@ func (c *Client) setCommonHeaders(req *http.Request) {
 
 func isFailureStatusCode(resp *http.Response) bool {
 	return resp.StatusCode < http.StatusOK || resp.StatusCode >= http.StatusBadRequest
+}
+
+func decodeXmeta(h http.Header, xmeta *XMetaResponse) {
+	if xmeta == nil {
+		return
+	}
+
+	if xmeta != nil {
+		if value, err := strconv.Atoi(h.Get("X-Ratelimit-Limit-Requests")); err == nil {
+			xmeta.XRateLimitRequests = value
+		}
+		if value, err := strconv.Atoi(h.Get("X-Ratelimit-Limit-Tokens")); err == nil {
+			xmeta.XRateLimitTokens = value
+		}
+		if value, err := strconv.Atoi(h.Get("X-Ratelimit-Remaining-Requests")); err == nil {
+			xmeta.XRateLimitRemainingRequests = value
+		}
+		if value, err := strconv.Atoi(h.Get("X-Ratelimit-Remaining-Tokens")); err == nil {
+			xmeta.XRateLimitRemainingTokens = value
+		}
+		xmeta.XRateLimitResetRequests, _ = time.ParseDuration(h.Get("X-Ratelimit-Reset-Requests"))
+		xmeta.XRateLimitResetTokens, _ = time.ParseDuration(h.Get("X-Ratelimit-Reset-Tokens"))
+	}
 }
 
 func decodeResponse(body io.Reader, v any) error {
